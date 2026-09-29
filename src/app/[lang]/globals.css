@@ -1,0 +1,110 @@
+@import 'tailwindcss';
+
+/* Paleta do PokeGoGuide. Claro por padrão; escuro por preferência do sistema ou escolha. */
+@theme {
+  --color-bg: #eceff5;
+  --color-surface: #ffffff;
+  --color-raised: #f5f7fb;
+  --color-highlight: #e2e7f0;
+  --color-line: #c7cedd;
+  --color-ink: #12151c;
+  --color-muted: #596174;
+  --color-brand: #c62828;
+  --color-brand-ink: #ffffff;
+  --color-tema: #0f6b6b; /* Glaceon: a cor de Notícias no site */
+  --color-danger: #c0243c;
+  --color-success: #126b3f;
+  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --radius-card: 1.125rem;
+  --shadow-card: 0 1px 2px rgb(16 21 32 / 0.04);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema='claro']) {
+    --color-bg: #0c0e13; --color-surface: #1b1f29; --color-raised: #242936; --color-highlight: #2b3140;
+    --color-line: #333b4d; --color-ink: #f2f4f8; --color-muted: #a3abbd; --color-brand: #ff453a;
+    --color-tema: #7ae0e0; --color-danger: #ff7a8f; --color-success: #4ade80; --shadow-card: none;
+  }
+}
+:root[data-tema='escuro'] {
+  --color-bg: #0c0e13; --color-surface: #1b1f29; --color-raised: #242936; --color-highlight: #2b3140;
+  --color-line: #333b4d; --color-ink: #f2f4f8; --color-muted: #a3abbd; --color-brand: #ff453a;
+  --color-tema: #7ae0e0; --color-danger: #ff7a8f; --color-success: #4ade80; --shadow-card: none;
+}
+
+:root {
+  --color-bg-tema: color-mix(in srgb, var(--color-tema) 5%, var(--color-bg));
+}
+
+html { color-scheme: light dark; }
+body {
+  font-family: var(--font-body);
+  background: var(--color-bg-tema);
+  color: var(--color-ink);
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+}
+:focus-visible { outline: 2px solid var(--color-tema); outline-offset: 2px; }
+
+/* Movimento só para quem não pediu menos. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+@keyframes pulsar { 0%, 100% { opacity: 1 } 50% { opacity: .45 } }
+.esqueleto { animation: pulsar 1.4s ease-in-out infinite; background: var(--color-highlight); border-radius: 0.75rem; }
+
+@layer components {
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+}
+.campo {
+  width: 100%;
+  background: var(--color-raised);
+  border: 1px solid var(--color-line);
+  border-radius: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  color: var(--color-ink);
+}
+.campo:focus { border-color: var(--color-tema); }
+/* Um só anel de foco (o do navegador somava outro por cima da borda) e sem as setinhas dos campos numéricos. */
+.campo:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-tema) 28%, transparent); }
+.campo[type='number'] { appearance: textfield; -moz-appearance: textfield; }
+.campo[type='number']::-webkit-inner-spin-button, .campo[type='number']::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.botao {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  border-radius: 0.75rem; padding: 0.625rem 1.125rem; font-weight: 600;
+  background: var(--color-brand); color: var(--color-brand-ink);
+  transition: transform .15s, opacity .15s;
+}
+.botao:hover { opacity: .92; }
+.botao:active { transform: scale(.97); }
+.botao:disabled { opacity: .5; cursor: not-allowed; }
+.botao-suave {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  border-radius: 0.75rem; padding: 0.5rem 0.875rem; font-weight: 600;
+  background: var(--color-raised); border: 1px solid var(--color-line); color: var(--color-ink);
+  transition: background .15s, transform .15s;
+}
+.botao-suave:hover { background: var(--color-highlight); }
+.botao-suave:active { transform: scale(.97); }
+
+}
+
+/* Sem barra de rolagem visível nos filtros. */
+.sem-barra { scrollbar-width: none; }
+.sem-barra::-webkit-scrollbar { display: none; }
+
+/* Ponto pulsante de "ao vivo". */
+@keyframes ao-vivo { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-brand) 55%, transparent) } 100% { box-shadow: 0 0 0 8px transparent } }
+.ao-vivo { animation: ao-vivo 1.6s ease-out infinite; }
+
+.prosa h2 { margin-top: 2.25rem; font-size: 1.5rem; font-weight: 800; line-height: 1.25; letter-spacing: -0.01em; display: flex; align-items: center; gap: .6rem; }
+.prosa h2::before { content: ''; width: .35rem; height: 1.3rem; border-radius: 9999px; background: var(--color-tema); flex: none; }
+
+/* Título, texto e tabela da matéria nunca estouram a largura do celular. */
+.prosa, h1, h2, h3 { overflow-wrap: anywhere; }
+body { overflow-x: clip; }
