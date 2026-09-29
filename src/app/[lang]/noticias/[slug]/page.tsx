@@ -8,22 +8,33 @@ import { FavoritoBotao } from '../../../../components/FavoritoBotao.tsx';
 import { Lateral } from '../../../../components/Lateral.tsx';
 import { servidor, servidorOpcional, type Categoria, type Post } from '../../../../lib/api.ts';
 import { dataDaPostagem, dataDoEvento, urlSegura } from '../../../../lib/formato.ts';
+import { JsonLd } from '../../../../components/JsonLd.tsx';
 import { ehLingua, textos } from '../../../../lib/i18n.ts';
+import { NOME, jsonLdDoArtigo, metaPagina } from '../../../../lib/seo.ts';
 
 type Props = { params: Promise<{ lang: string; slug: string }> };
+
+/** "Nome | PokeGoGuide Blog": marca no título da aba e do resultado, sem passar de ~65 letras (o Google corta acima disso). */
+const tituloDoArtigo = (t: string): string => {
+  const com = `${t} | ${NOME}`;
+  return com.length <= 65 ? com : t.length <= 65 ? t : `${t.slice(0, 62).trimEnd()}…`;
+};
 
 const buscar = (slug: string, lang: string) => servidor<{ post: Post }>(`/posts/${encodeURIComponent(slug)}?lang=${lang}`);
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang, slug } = await params;
   const r = ehLingua(lang) ? await buscar(slug, lang).catch(() => null) : null;
-  if (!r) return {};
-  return {
-    title: r.post.title,
-    description: r.post.summary,
-    alternates: { canonical: `/${lang}/noticias/${slug}`, languages: { 'pt-BR': `/pt/noticias/${slug}`, en: `/en/noticias/${slug}` } },
-    openGraph: { title: r.post.title, description: r.post.summary, type: 'article', images: urlSegura(r.post.image) ? [r.post.image!] : [] },
-  };
+  if (!r) return { robots: { index: false, follow: false } };
+  const { post } = r;
+  // Página em português com texto ainda em inglês: o endereço "oficial" é o do idioma em que o texto existe.
+  const donoDoTexto = post.lingua;
+  const idiomas = post.langs.length ? post.langs : [donoDoTexto];
+  return metaPagina({
+    lang: donoDoTexto, caminho: `/noticias/${slug}`, titulo: tituloDoArtigo(post.title), descricao: post.summary || post.title,
+    imagem: post.image, tipo: 'article', idiomas, publicadoEm: post.publishedAt, atualizadoEm: post.updatedAt,
+    noindex: false,
+  });
 }
 
 export default async function Noticia({ params }: Props) {
@@ -42,11 +53,15 @@ export default async function Noticia({ params }: Props) {
   return (
     <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_20rem]">
       <ContaVisita slug={post.slug} />
+      <JsonLd dados={jsonLdDoArtigo(post, lang, rotulo, post.category)} />
       <article className="min-w-0 space-y-6">
         <Link href={`/${lang}`} className="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-ink"><ArrowLeft size={16} />{t.post.voltar}</Link>
 
         <header className="space-y-4">
-          <span className="inline-block rounded-full bg-highlight px-3 py-1 text-xs font-bold text-tema">{rotulo}</span>
+          <div className="flex flex-wrap items-center gap-2">
+            {post.source === 'admin' && <span className="rounded-full bg-tema px-3 py-1 text-xs font-bold uppercase tracking-wide text-bg">{t.seo.materiaBadge}</span>}
+            <Link href={`/${lang}/categoria/${post.category}`} className="rounded-full bg-highlight px-3 py-1 text-xs font-bold text-tema hover:underline">{rotulo}</Link>
+          </div>
           <h1 className="text-3xl font-extrabold leading-tight tracking-tight sm:text-5xl">{post.title}</h1>
           <p className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted">
             <span className="flex items-center gap-1.5"><CalendarDays size={15} className="text-tema" />{dataDaPostagem(post.publishedAt, lang)}</span>

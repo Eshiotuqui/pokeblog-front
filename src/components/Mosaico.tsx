@@ -22,7 +22,10 @@ function Capa({ post, lingua, rotulo, grande, indice }: { post: Post; lingua: Li
           : <div className="absolute inset-0 -z-10 bg-gradient-to-br from-[#0f6b6b] to-[#12151c]" />}
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
         <div className={`absolute inset-x-0 bottom-0 space-y-2 ${grande ? 'p-6 sm:p-8' : 'p-4'}`}>
-          <span className="inline-block rounded-full bg-white/15 px-3 py-1 text-xs font-semibold backdrop-blur">{rotulo}</span>
+          <div className="flex flex-wrap gap-2">
+            {post.source === 'admin' && <span className="rounded-full bg-[#7ae0e0] px-3 py-1 text-xs font-bold uppercase tracking-wide text-[#0c0e13]">{textos[lingua].seo.materiaBadge}</span>}
+            <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold backdrop-blur">{rotulo}</span>
+          </div>
           <h2 className={`font-extrabold leading-tight tracking-tight ${grande ? 'text-2xl sm:text-4xl' : 'line-clamp-2 text-base sm:text-lg'}`}>{post.title}</h2>
           {grande && <p className="hidden text-sm text-white/80 sm:block">{dataDaPostagem(post.publishedAt, lingua)}</p>}
         </div>

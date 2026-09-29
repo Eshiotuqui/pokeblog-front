@@ -72,6 +72,19 @@ export function Header({ lingua }: { lingua: Lingua }) {
           {escuro ? <Sun size={18} /> : <Moon size={18} />}
         </button>
       </div>
+      {/* Seções: Notícias (automáticas), Matérias (escritas por nós) e Perguntas. */}
+      <nav aria-label="seções" className="sem-barra mx-auto flex max-w-6xl gap-1 overflow-x-auto px-3 pb-1.5 sm:px-4">
+        {([['', t.navSecoes.noticias], ['/materias', t.navSecoes.materias], ['/perguntas', t.navSecoes.perguntas]] as const).map(([c, rotulo]) => {
+          const href = `/${lingua}${c}`;
+          const ativo = c === '' ? caminho === `/${lingua}` || caminho.startsWith(`/${lingua}/noticias`) || caminho.startsWith(`/${lingua}/categoria`) : caminho.startsWith(href);
+          return (
+            <Link key={c} href={href} aria-current={ativo ? 'page' : undefined}
+              className={`whitespace-nowrap rounded-full px-3 py-1 text-sm font-semibold transition ${ativo ? 'bg-tema text-bg' : 'text-muted hover:bg-highlight hover:text-ink'}`}>
+              {rotulo}
+            </Link>
+          );
+        })}
+      </nav>
     </header>
   );
 }

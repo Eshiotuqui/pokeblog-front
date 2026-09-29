@@ -4,8 +4,9 @@ export interface Post {
   id: number; slug: string; source: 'auto' | 'admin'; category: string;
   title: string; lingua: Lingua; summary: string; body?: string;
   image: string | null; link: string | null;
-  eventStart: string | null; eventEnd: string | null; publishedAt: string; views: number; pinned: boolean; favorito?: boolean;
+  eventStart: string | null; eventEnd: string | null; publishedAt: string; updatedAt: string; langs: Lingua[]; views: number; pinned: boolean; favorito?: boolean;
 }
+export interface ItemSitemap { slug: string; source: 'auto' | 'admin'; category: string; updatedAt: string; publishedAt: string; langs: Lingua[] }
 export interface Lateral { recentes: Post[]; populares: Post[]; agora: Post[]; breve: Post[]; avisos: Post[] }
 export interface Usuario {
   id: number; email: string; role: 'user' | 'admin'; name: string; team: 'valor' | 'mystic' | 'instinct' | null;

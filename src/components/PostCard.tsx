@@ -25,7 +25,10 @@ export function PostCard({ post, lingua, rotulo, indice = 0, mostrarFim = false 
           // eslint-disable-next-line @next/next/no-img-element
           ? <img src={imagem} alt="" loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
           : <div className="grid h-full place-items-center bg-gradient-to-br from-tema/30 to-highlight text-4xl text-tema">◓</div>}
-        <span className="absolute left-3 top-3 rounded-full bg-surface/90 px-2.5 py-0.5 text-xs font-semibold text-tema backdrop-blur">{rotulo}</span>
+        <span className="absolute left-3 top-3 flex flex-wrap gap-1.5">
+          {post.source === 'admin' && <span className="rounded-full bg-tema px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide text-bg">{t.seo.materiaBadge}</span>}
+          <span className="rounded-full bg-surface/90 px-2.5 py-0.5 text-xs font-semibold text-tema backdrop-blur">{rotulo}</span>
+        </span>
       </Link>
       <div className="flex flex-1 flex-col gap-2 p-4">
         <h3 className="text-lg font-bold leading-snug">
