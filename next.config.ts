@@ -1,6 +1,7 @@
 import type { NextConfig } from 'next';
 
-const API = process.env.API_URL ?? 'http://localhost:4000';
+// Só a origem (https://host): barra ou caminho sobrando no final (".../0") quebravam todas as rotas.
+const API = new URL(process.env.API_URL ?? 'http://localhost:4000').origin;
 
 const config: NextConfig = {
   poweredByHeader: false,

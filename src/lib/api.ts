@@ -15,7 +15,7 @@ export interface Lista { total: number; page: number; pages: number; posts: Post
 export interface Categoria { id: string; pt: string; en: string }
 
 /** Do servidor (Server Components): fala direto com a API. */
-const API = process.env.API_URL ?? 'http://localhost:4000';
+const API = new URL(process.env.API_URL ?? 'http://localhost:4000').origin;
 
 /** A API não respondeu (fora do ar ou erro 5xx). Diferente de "não existe": esse caso devolve null. */
 export class ApiIndisponivel extends Error {
