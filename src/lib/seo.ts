@@ -5,6 +5,7 @@
  */
 import type { Metadata } from 'next';
 import type { Post } from './api.ts';
+import { BASE } from './base.ts';
 import { textos, type Lingua } from './i18n.ts';
 
 export const NOME = 'PokeGoGuide Blog';
@@ -20,11 +21,17 @@ export function normalizarSite(bruto: string): string {
   return limpo.replace(/^http:\/\//i, 'https://').replace(/^(?!https?:\/\/)/i, 'https://');
 }
 
-/** O endereço público do blog. Em produção defina NEXT_PUBLIC_SITE_URL. */
-export const SITE =
+/**
+ * O endereço público do blog, já com o `/blog`. Em produção defina
+ * NEXT_PUBLIC_SITE_URL (`https://pokegoguide.com/blog`); se vier só o
+ * domínio, o `/blog` entra aqui.
+ */
+const comBase = (site: string): string => (site && !site.endsWith(BASE) ? `${site}${BASE}` : site);
+export const SITE = comBase(
   normalizarSite(process.env.NEXT_PUBLIC_SITE_URL ?? '') ||
   normalizarSite(process.env.VERCEL_PROJECT_PRODUCTION_URL ?? '') ||
-  'http://localhost:3000';
+  'http://localhost:3000',
+);
 
 /** O app principal (PokeGoGuide), com quem o blog se liga. */
 export const SITE_PRINCIPAL = normalizarSite(process.env.NEXT_PUBLIC_MAIN_SITE ?? '') || 'https://pokegoguide.com';

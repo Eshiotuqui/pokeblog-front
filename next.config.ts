@@ -1,10 +1,14 @@
 import type { NextConfig } from 'next';
+import { BASE } from './src/lib/base.ts';
 
 const config: NextConfig = {
   poweredByHeader: false,
+  // O blog é servido em pokegoguide.com/blog (veja src/lib/base.ts).
+  basePath: BASE,
   turbopack: { root: process.cwd() },
   // A API é alcançada pelo repasse em src/app/api/[...caminho]/route.ts (não por rewrite): ele filtra as rotas,
   // e repassa o IP real do visitante, assinado. O cookie de login fica no domínio do site.
+  // Com o basePath, `/` aqui é `/blog`, e o destino vira `/blog/pt`.
   async redirects() {
     return [{ source: '/', destination: '/pt', permanent: false }];
   },

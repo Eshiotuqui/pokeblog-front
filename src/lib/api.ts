@@ -1,3 +1,4 @@
+import { BASE } from './base.ts';
 import type { Lingua } from './i18n.ts';
 
 export interface Post {
@@ -59,7 +60,7 @@ export class ErroApi extends Error {
 
 /** Do navegador: passa pelo /api do próprio site, então o cookie de login vai junto. */
 export async function chamar<T>(metodo: string, caminho: string, corpo?: unknown): Promise<T> {
-  const r = await fetch(`/api${caminho}`, {
+  const r = await fetch(`${BASE}/api${caminho}`, {
     method: metodo,
     credentials: 'same-origin',
     headers: corpo === undefined ? undefined : { 'content-type': 'application/json' },

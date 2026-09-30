@@ -4,6 +4,7 @@ import { Check, Copy, Download, KeyRound, LogOut, ShieldCheck, ShieldOff } from 
 import QRCode from 'qrcode';
 import { useEffect, useState, type FormEvent } from 'react';
 import { chamar, type Usuario } from '../lib/api.ts';
+import { BASE } from '../lib/base.ts';
 import { textos, type Lingua } from '../lib/i18n.ts';
 import { useAuth } from './Auth.tsx';
 
@@ -60,7 +61,7 @@ export function SegurancaForm({ lingua }: { lingua: Lingua }) {
     await chamar('POST', '/auth/senha', { atual: String(f.get('atual') ?? ''), nova: String(f.get('nova') ?? ''), ...(usuario.mfaAtivo ? { codigo: texto(f, 'codigo') } : {}) });
     form.reset(); setAviso(s.trocada);
   }); };
-  const sairDeTodos = () => rodar(async () => { await chamar('POST', '/auth/sair-de-todos'); await sair(); window.location.href = `/${lingua}/entrar`; });
+  const sairDeTodos = () => rodar(async () => { await chamar('POST', '/auth/sair-de-todos'); await sair(); window.location.href = `${BASE}/${lingua}/entrar`; });
 
   const copiar = async () => {
     try { await navigator.clipboard.writeText(codigos.join('\n')); setCopiado(true); setTimeout(() => setCopiado(false), 2000); } catch { /* sem permissão da área de transferência */ }
