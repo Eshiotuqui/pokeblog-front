@@ -5,7 +5,7 @@ export const ehLingua = (v: string): v is Lingua => (LINGUAS as readonly string[
 const pt = {
   titulo: 'PokeGoGuide Blog',
   descricao: 'Notícias e eventos do Pokémon GO, atualizados sozinhos e em português.',
-  nav: { noticias: 'Notícias', favoritos: 'Favoritos', perfil: 'Perfil', admin: 'Admin', entrar: 'Entrar', sair: 'Sair', cadastrar: 'Criar conta' },
+  nav: { noticias: 'Notícias', favoritos: 'Favoritos', perfil: 'Perfil', admin: 'Admin', entrar: 'Entrar', sair: 'Sair', cadastrar: 'Criar conta', voltarAoSite: 'Voltar ao PokeGoGuide', voltarCurto: 'Guia' },
   feed: { buscar: 'Buscar notícias…', todas: 'Todas', vazio: 'Nenhuma notícia encontrada.', instavel: 'Estamos com instabilidade para carregar as notícias. Tente de novo em instantes.', tentar: 'Tentar de novo', anterior: 'Anterior', proxima: 'Próxima', pagina: 'Página' },
   post: { voltar: 'Voltar', fonte: 'Ver fonte original', quando: 'Quando', inicio: 'Começa', fim: 'Termina', horaLocal: 'horário local de quem joga', outraLingua: 'Este texto ainda não existe em português; mostrando em inglês.', favoritar: 'Favoritar', desfavoritar: 'Remover dos favoritos', entrarParaFavoritar: 'Entre para favoritar', naoEncontrada: 'Notícia não encontrada.', automatica: 'Notícia', manual: 'Matéria' },
   auth: { email: 'E-mail', senha: 'Senha', nome: 'Como quer ser chamado', entrar: 'Entrar', criar: 'Criar conta', semConta: 'Ainda não tem conta?', temConta: 'Já tem conta?', erro: 'Algo deu errado. Tente de novo.', senhaDica: 'Mínimo de 10 caracteres; evite senhas comuns e o seu nome ou e-mail.' },
@@ -55,7 +55,7 @@ const pt = {
 const en: typeof pt = {
   titulo: 'PokeGoGuide Blog',
   descricao: 'Pokémon GO news and events, updated automatically.',
-  nav: { noticias: 'News', favoritos: 'Favorites', perfil: 'Profile', admin: 'Admin', entrar: 'Log in', sair: 'Log out', cadastrar: 'Sign up' },
+  nav: { noticias: 'News', favoritos: 'Favorites', perfil: 'Profile', admin: 'Admin', entrar: 'Log in', sair: 'Log out', cadastrar: 'Sign up', voltarAoSite: 'Back to PokeGoGuide', voltarCurto: 'Guide' },
   feed: { buscar: 'Search news…', todas: 'All', vazio: 'No news found.', instavel: 'We are having trouble loading the news. Please try again shortly.', tentar: 'Try again', anterior: 'Previous', proxima: 'Next', pagina: 'Page' },
   post: { voltar: 'Back', fonte: 'View original source', quando: 'When', inicio: 'Starts', fim: 'Ends', horaLocal: "player's local time", outraLingua: 'This text is not available in English yet; showing Portuguese.', favoritar: 'Favorite', desfavoritar: 'Remove from favorites', entrarParaFavoritar: 'Log in to favorite', naoEncontrada: 'Article not found.', automatica: 'News', manual: 'Article' },
   auth: { email: 'Email', senha: 'Password', nome: 'What should we call you', entrar: 'Log in', criar: 'Create account', semConta: "Don't have an account?", temConta: 'Already have an account?', erro: 'Something went wrong. Try again.', senhaDica: 'At least 10 characters; avoid common passwords and your name or email.' },

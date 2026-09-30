@@ -1,11 +1,12 @@
 'use client';
 
-import { Heart, LogOut, Moon, Shield, Sun } from 'lucide-react';
+import { ArrowLeft, Heart, LogOut, Moon, Shield, Sun } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { spriteDe } from '../lib/formato.ts';
 import { textos, type Lingua } from '../lib/i18n.ts';
+import { SITE_PRINCIPAL } from '../lib/seo.ts';
 import { useAuth } from './Auth.tsx';
 import { Pokebola } from './Marca.tsx';
 
@@ -40,6 +41,11 @@ export function Header({ lingua }: { lingua: Lingua }) {
           <Pokebola />
           <span className="max-[379px]:hidden">PokeGoGuide<span className="text-tema max-[430px]:hidden"> Blog</span></span>
         </Link>
+
+        {/* Volta ao site principal. `<a>` comum: o `<Link>` ficaria preso no /blog (o basePath). */}
+        <a href={`${SITE_PRINCIPAL}/`} className="flex min-h-10 items-center gap-1.5 whitespace-nowrap rounded-lg px-2 text-sm font-medium text-muted transition hover:bg-highlight hover:text-ink sm:px-2.5" aria-label={t.nav.voltarAoSite} title={t.nav.voltarAoSite}>
+          <ArrowLeft size={18} /><span className="sm:hidden">{t.nav.voltarCurto}</span><span className="hidden sm:inline">PokeGoGuide</span>
+        </a>
 
         {usuario && (
           <Link href={`/${lingua}/favoritos`} className={link} aria-label={t.nav.favoritos} title={t.nav.favoritos}>
