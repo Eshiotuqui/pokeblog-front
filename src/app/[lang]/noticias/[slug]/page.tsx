@@ -11,13 +11,18 @@ import { dataDaPostagem, dataDoEvento, urlSegura } from '../../../../lib/formato
 import { JsonLd } from '../../../../components/JsonLd.tsx';
 import { ehLingua, textos } from '../../../../lib/i18n.ts';
 import { NOME, jsonLdDoArtigo, metaPagina } from '../../../../lib/seo.ts';
+import { descricaoDeBusca, tituloDeBusca } from '../../../../lib/seoNoticia.ts';
 
 type Props = { params: Promise<{ lang: string; slug: string }> };
 
-/** "Nome | PokeGoGuide Blog": marca no título da aba e do resultado, sem passar de ~65 letras (o Google corta acima disso). */
+/**
+ * "Nome | PokeGoGuide Blog": a marca entra quando cabe em ~65 letras, que é o que o Google mostra. Título maior não
+ * é cortado aqui: o Google só esconde o fim na tela, mas lê o título inteiro, e as palavras do fim ("recompensas",
+ * "horário") também contam na busca. Só o exagero (mais de 100) é cortado.
+ */
 const tituloDoArtigo = (t: string): string => {
   const com = `${t} | ${NOME}`;
-  return com.length <= 65 ? com : t.length <= 65 ? t : `${t.slice(0, 62).trimEnd()}…`;
+  return com.length <= 65 ? com : t.length <= 100 ? t : `${t.slice(0, 99).trimEnd()}…`;
 };
 
 const buscar = (slug: string, lang: string) => servidor<{ post: Post }>(`/posts/${encodeURIComponent(slug)}?lang=${lang}`);
@@ -31,7 +36,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const donoDoTexto = post.lingua;
   const idiomas = post.langs.length ? post.langs : [donoDoTexto];
   return metaPagina({
-    lang: donoDoTexto, caminho: `/noticias/${slug}`, titulo: tituloDoArtigo(post.title), descricao: post.summary || post.title,
+    lang: donoDoTexto, caminho: `/noticias/${slug}`,
+    // Notícia automática: título e descrição montados para a busca (veja lib/seoNoticia.ts). Matéria: os de quem escreveu.
+    titulo: post.source === 'auto' ? tituloDoArtigo(tituloDeBusca(post)) : tituloDoArtigo(post.title),
+    descricao: post.source === 'auto' ? descricaoDeBusca(post) : post.summary || post.title,
     imagem: post.image, tipo: 'article', idiomas, publicadoEm: post.publishedAt, atualizadoEm: post.updatedAt,
     noindex: false,
   });

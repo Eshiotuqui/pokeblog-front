@@ -5,6 +5,7 @@
  */
 import type { Metadata } from 'next';
 import type { Post } from './api.ts';
+import { descricaoDeBusca } from './seoNoticia.ts';
 import { BASE } from './base.ts';
 import { textos, type Lingua } from './i18n.ts';
 
@@ -152,9 +153,10 @@ export function jsonLdDePagina(p: {
 export function jsonLdDoArtigo(post: Post, lang: Lingua, rotuloCategoria: string, categoriaId: string): unknown {
   const url = urlDe(lang, `/noticias/${post.slug}`);
   const imagens = post.image && /^https?:\/\//.test(post.image) ? [post.image] : [`${SITE}/${CAPA.arquivo}`];
+  const descricao = post.source === 'auto' ? descricaoDeBusca(post) : post.summary;
   const artigo = {
     '@type': post.source === 'admin' ? 'BlogPosting' : 'NewsArticle', '@id': `${url}#artigo`,
-    mainEntityOfPage: { '@id': `${url}#pagina` }, headline: post.title.slice(0, 110), description: post.summary,
+    mainEntityOfPage: { '@id': `${url}#pagina` }, headline: post.title.slice(0, 110), description: descricao,
     image: imagens, datePublished: post.publishedAt, dateModified: post.updatedAt, inLanguage: hreflang(post.lingua),
     articleSection: rotuloCategoria, author: { '@id': `${SITE}/#marca` }, publisher: { '@id': `${SITE}/#marca` },
     isPartOf: { '@id': `${SITE}/#blog` },
@@ -163,7 +165,7 @@ export function jsonLdDoArtigo(post: Post, lang: Lingua, rotuloCategoria: string
   const grafo = [
     noWebSite(lang), noMarca(), noSite(lang),
     {
-      '@type': 'WebPage', '@id': `${url}#pagina`, url, name: post.title, description: post.summary, inLanguage: hreflang(post.lingua),
+      '@type': 'WebPage', '@id': `${url}#pagina`, url, name: post.title, description: descricao, inLanguage: hreflang(post.lingua),
       isPartOf: { '@id': `${SITE}/#site` }, breadcrumb: { '@id': `${url}#caminho` }, primaryImageOfPage: { '@type': 'ImageObject', url: imagens[0] },
     },
     artigo,
