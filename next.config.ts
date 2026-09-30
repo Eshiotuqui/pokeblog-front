@@ -1,18 +1,28 @@
 import type { NextConfig } from 'next';
 
-// Só a origem (https://host): barra ou caminho sobrando no final (".../0") quebravam todas as rotas.
-const API = new URL(process.env.API_URL ?? 'http://localhost:4000').origin;
-
 const config: NextConfig = {
   poweredByHeader: false,
   turbopack: { root: process.cwd() },
-  // O navegador fala só com o próprio site; o Next repassa para a API.
-  // Assim o cookie de login é do mesmo domínio (sem CORS nem cookie de terceiros).
-  async rewrites() {
-    return [{ source: '/api/:path*', destination: `${API}/:path*` }];
-  },
+  // A API é alcançada pelo repasse em src/app/api/[...caminho]/route.ts (não por rewrite): ele filtra as rotas,
+  // e repassa o IP real do visitante, assinado. O cookie de login fica no domínio do site.
   async redirects() {
     return [{ source: '/', destination: '/pt', permanent: false }];
+  },
+  // Cabeçalhos de segurança em todas as respostas. (A CSP, que muda a cada requisição por causa do nonce, é montada no proxy.)
+  async headers() {
+    const todas = [
+      { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
+      { key: 'X-Content-Type-Options', value: 'nosniff' },
+      { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+      { key: 'X-Frame-Options', value: 'DENY' },
+      { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
+      { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=(), interest-cohort=()' },
+    ];
+    return [
+      { source: '/:path*', headers: todas },
+      // Páginas de conta: nunca em cache (nem do navegador, nem de um proxy no meio).
+      { source: '/:lang(pt|en)/:pagina(admin|perfil|favoritos|entrar|cadastro)', headers: [{ key: 'Cache-Control', value: 'no-store' }] },
+    ];
   },
   images: { remotePatterns: [{ protocol: 'https', hostname: 'cdn.leekduck.com' }] },
 };

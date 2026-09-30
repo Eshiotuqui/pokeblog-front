@@ -3,7 +3,7 @@
 import { Pencil, Plus, RefreshCw, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
-import { chamar, type Categoria } from '../lib/api.ts';
+import { chamar, ErroApi, type Categoria } from '../lib/api.ts';
 import { textos, type Lingua } from '../lib/i18n.ts';
 import { useAuth } from './Auth.tsx';
 
@@ -25,8 +25,11 @@ export function Admin({ lingua, categorias }: { lingua: Lingua; categorias: Cate
   const [msg, setMsg] = useState('');
   const [buscando, setBuscando] = useState(false);
 
+  const [exigeMfa, setExigeMfa] = useState(false);
   const carregar = useCallback(() => {
-    chamar<{ posts: PostAdmin[] }>('GET', '/admin/posts').then((r) => setPosts(r.posts)).catch(() => {});
+    chamar<{ posts: PostAdmin[] }>('GET', '/admin/posts')
+      .then((r) => { setPosts(r.posts); setExigeMfa(false); })
+      .catch((x) => { if (x instanceof ErroApi && x.codigo === 'MFA_OBRIGATORIO') setExigeMfa(true); });
   }, []);
   useEffect(() => { if (usuario?.role === 'admin') carregar(); }, [usuario, carregar]);
 
@@ -65,6 +68,13 @@ export function Admin({ lingua, categorias }: { lingua: Lingua; categorias: Cate
     carregar();
   };
 
+  if (exigeMfa) {
+    return (
+      <p role="status" className="card space-y-3 p-6">
+        {textos[lingua].seg.obrigatorio} <Link className="font-semibold text-tema underline" href={`/${lingua}/perfil#seguranca`}>{textos[lingua].seg.irConfigurar}</Link>
+      </p>
+    );
+  }
   if (editando) {
     return <Editor lingua={lingua} categorias={categorias} inicial={editando} aoFechar={() => { setEditando(null); carregar(); }} />;
   }

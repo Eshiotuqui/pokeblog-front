@@ -6,6 +6,7 @@ import { AuthProvider } from '../../components/Auth.tsx';
 import { Header } from '../../components/Header.tsx';
 import { ehLingua, LINGUAS, textos } from '../../lib/i18n.ts';
 import { Analytics } from '../../components/Analytics.tsx';
+import { AvisoMfa } from '../../components/AvisoMfa.tsx';
 import { servidorOpcional, type Categoria } from '../../lib/api.ts';
 import { MARCA, NOME, SITE, SITE_PRINCIPAL, urlDe } from '../../lib/seo.ts';
 import Link from 'next/link';
@@ -51,6 +52,7 @@ export default async function Layout({ children, params }: { children: ReactNode
       <body>
         <AuthProvider>
           <Header lingua={lang} />
+          <AvisoMfa lingua={lang} />
           <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
           <footer className="mx-auto max-w-6xl space-y-3 px-4 pb-10 pt-4 text-center text-xs text-muted">
             {cats.length > 0 && (

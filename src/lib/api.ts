@@ -11,6 +11,10 @@ export interface Lateral { recentes: Post[]; populares: Post[]; agora: Post[]; b
 export interface Usuario {
   id: number; email: string; role: 'user' | 'admin'; name: string; team: 'valor' | 'mystic' | 'instinct' | null;
   avatarDex: number | null; bio: string; trainerLevel: number | null; favoritePokemon: number[];
+  /** A conta tem verificação em duas etapas ligada. */
+  mfaAtivo: boolean;
+  /** O painel exige MFA e esta conta ainda não ativou (só o admin). */
+  mfaObrigatorio: boolean;
 }
 export interface Lista { total: number; page: number; pages: number; posts: Post[] }
 export interface Categoria { id: string; pt: string; en: string }
@@ -50,7 +54,7 @@ export async function servidorOpcional<T>(caminho: string): Promise<T | null> {
 }
 
 export class ErroApi extends Error {
-  constructor(public status: number, message: string) { super(message); }
+  constructor(public status: number, message: string, public codigo?: string) { super(message); }
 }
 
 /** Do navegador: passa pelo /api do próprio site, então o cookie de login vai junto. */
@@ -61,7 +65,7 @@ export async function chamar<T>(metodo: string, caminho: string, corpo?: unknown
     headers: corpo === undefined ? undefined : { 'content-type': 'application/json' },
     body: corpo === undefined ? undefined : JSON.stringify(corpo),
   });
-  const json = (await r.json().catch(() => ({}))) as { erro?: string };
-  if (!r.ok) throw new ErroApi(r.status, json.erro ?? 'Erro');
+  const json = (await r.json().catch(() => ({}))) as { erro?: string; codigo?: string };
+  if (!r.ok) throw new ErroApi(r.status, json.erro ?? 'Erro', json.codigo);
   return json as T;
 }
