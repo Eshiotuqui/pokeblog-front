@@ -2,6 +2,7 @@ import { ArrowLeft, CalendarDays, Clock, Eye, ExternalLink } from 'lucide-react'
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { ChamadaDoGuia } from '../../../../components/ChamadaDoGuia.tsx';
 import { ContaVisita } from '../../../../components/ContaVisita.tsx';
 import { Corpo } from '../../../../components/Corpo.tsx';
 import { FavoritoBotao } from '../../../../components/FavoritoBotao.tsx';
@@ -97,6 +98,8 @@ export default async function Noticia({ params }: Props) {
 
         {post.summary && !post.body?.includes(post.summary.slice(0, 60)) && <p className="text-xl font-medium leading-relaxed text-muted">{post.summary}</p>}
         {post.body && <Corpo texto={post.body} rotuloShiny={t.lateral.shiny} t={t.materia} />}
+
+        <ChamadaDoGuia categoria={post.source === 'auto' ? post.category : ''} lingua={lang} />
 
         <div className="flex flex-wrap items-center gap-3 border-t border-line pt-5">
           <FavoritoBotao slug={post.slug} inicial={post.favorito} lingua={lang} />
