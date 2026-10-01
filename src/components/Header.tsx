@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { spriteDe } from '../lib/formato.ts';
 import { textos, type Lingua } from '../lib/i18n.ts';
 import { SITE_PRINCIPAL } from '../lib/seo.ts';
+import { rastreio } from '../lib/analytics.ts';
 import { useAuth } from './Auth.tsx';
 import { Pokebola } from './Marca.tsx';
 
@@ -43,7 +44,7 @@ export function Header({ lingua }: { lingua: Lingua }) {
         </Link>
 
         {/* Volta ao site principal. `<a>` comum: o `<Link>` ficaria preso no /blog (o basePath). */}
-        <a href={`${SITE_PRINCIPAL}/`} className="flex min-h-10 items-center gap-1.5 whitespace-nowrap rounded-lg px-2 text-sm font-medium text-muted transition hover:bg-highlight hover:text-ink sm:px-2.5" aria-label={t.nav.voltarAoSite} title={t.nav.voltarAoSite}>
+        <a href={`${SITE_PRINCIPAL}/`} {...rastreio('ir_para_guia', { origem: 'cabecalho', destino: '/' })} className="flex min-h-10 items-center gap-1.5 whitespace-nowrap rounded-lg px-2 text-sm font-medium text-muted transition hover:bg-highlight hover:text-ink sm:px-2.5" aria-label={t.nav.voltarAoSite} title={t.nav.voltarAoSite}>
           <ArrowLeft size={18} /><span className="sm:hidden">{t.nav.voltarCurto}</span><span className="hidden sm:inline">PokeGoGuide</span>
         </a>
 

@@ -5,6 +5,7 @@ import { dataDaPostagem, dataDoEvento } from '../lib/formato.ts';
 import { localeDe, textos, type Lingua } from '../lib/i18n.ts';
 import { Pokebola } from './Marca.tsx';
 import { Cartao } from './Secao.tsx';
+import { rastreio } from '../lib/analytics.ts';
 
 const SITE = process.env.NEXT_PUBLIC_MAIN_SITE ?? 'https://pokegoguide.com';
 
@@ -79,7 +80,7 @@ export async function Lateral({ lingua }: { lingua: Lingua }) {
         </Cartao>
       )}
 
-      <a href={SITE} className="group relative block overflow-hidden rounded-3xl border border-line bg-gradient-to-br from-tema/20 via-surface to-surface p-5 transition hover:border-tema">
+      <a href={SITE} {...rastreio('ir_para_guia', { origem: 'lateral', destino: '/' })} className="group relative block overflow-hidden rounded-3xl border border-line bg-gradient-to-br from-tema/20 via-surface to-surface p-5 transition hover:border-tema">
         <Pokebola tamanho={44} />
         <strong className="mt-3 block text-lg">PokeGoGuide</strong>
         <span className="block text-sm text-muted">{t.ferramentasTexto}</span>

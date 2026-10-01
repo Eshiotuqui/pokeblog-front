@@ -4,6 +4,7 @@ import { Heart } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { evento } from '../lib/analytics.ts';
 import { chamar } from '../lib/api.ts';
 import { textos, type Lingua } from '../lib/i18n.ts';
 import { useAuth } from './Auth.tsx';
@@ -33,6 +34,7 @@ export function FavoritoBotao({ slug, inicial, lingua, compacto = false }: { slu
     setOcupado(true);
     try {
       await chamar(alvo ? 'PUT' : 'DELETE', `/posts/${slug}/favorito`);
+      evento(alvo ? 'favoritar' : 'desfavoritar', { slug });
     } catch {
       setFav(!alvo);
     } finally {

@@ -61,7 +61,7 @@ export default async function Noticia({ params }: Props) {
 
   return (
     <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_20rem]">
-      <ContaVisita slug={post.slug} />
+      <ContaVisita slug={post.slug} categoria={post.category} tipo={post.source === 'admin' ? 'materia' : 'noticia'} />
       <JsonLd dados={jsonLdDoArtigo(post, lang, rotulo, post.category)} />
       <article className="min-w-0 space-y-6">
         <Link href={`/${lang}`} className="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-ink"><ArrowLeft size={16} />{t.post.voltar}</Link>

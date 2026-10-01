@@ -1,4 +1,5 @@
 import { ArrowRight } from 'lucide-react';
+import { rastreio } from '../lib/analytics.ts';
 import type { Lingua } from '../lib/i18n.ts';
 import { SITE_PRINCIPAL } from '../lib/seo.ts';
 import { Pokebola } from './Marca.tsx';
@@ -60,7 +61,8 @@ export function ChamadaDoGuia({ categoria, lingua }: { categoria: string; lingua
         <p className="text-lg font-extrabold leading-tight">{titulo}</p>
         <p className="text-sm text-muted">{texto}</p>
       </div>
-      <a href={`${SITE_PRINCIPAL}${c.caminho}`} className="botao inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap">
+      <a href={`${SITE_PRINCIPAL}${c.caminho}`} {...rastreio('ir_para_guia', { origem: 'noticia', categoria: categoria || 'materia', destino: c.caminho })}
+        className="botao inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap">
         {botao}<ArrowRight size={16} />
       </a>
     </aside>

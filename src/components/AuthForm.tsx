@@ -6,6 +6,7 @@ import { useState, type FormEvent } from 'react';
 import { chamar, ErroApi, type Usuario } from '../lib/api.ts';
 import { textos, type Lingua } from '../lib/i18n.ts';
 import { useAuth } from './Auth.tsx';
+import { evento } from '../lib/analytics.ts';
 
 type Resposta = { usuario: Usuario } | { mfaObrigatorio: true; ticket: string };
 
@@ -20,6 +21,8 @@ export function AuthForm({ lingua, modo, destino }: { lingua: Lingua; modo: 'ent
   const cadastro = modo === 'cadastro';
 
   const concluir = (u: Usuario) => {
+    // Nomes que o GA já conhece: aparecem nos relatórios prontos de aquisição de usuários.
+    evento(cadastro ? 'sign_up' : 'login', { method: 'email' });
     definir(u);
     router.push(destino);
     router.refresh();
